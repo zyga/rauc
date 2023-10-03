@@ -15,7 +15,7 @@ typedef enum {
 	R_HASH_INDEX_ERROR_MODIFIED,
 } RHashIndexErrorError;
 
-#define R_HASH_INDEX_CHUNK_SIZE 4096
+#define R_HASH_INDEX_CHUNK_SIZE (4096*1024)
 
 typedef struct {
 	guint8 data[R_HASH_INDEX_CHUNK_SIZE];

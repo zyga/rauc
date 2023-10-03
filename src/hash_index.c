@@ -150,7 +150,7 @@ static guint32 *build_lookup(GBytes *hashes)
 /**
  * Calculate chunk count required for file.
  *
- * The chunk size is hard-coded to 4k.
+ * The chunk size is hard-coded to R_HASH_INDEX_CHUNK_SIZE.
  *
  * @param data_fd open file descriptor of file to get chunk count for
  * @param error return location for a GError, or NULL
@@ -192,23 +192,23 @@ static guint32 get_chunk_count(int data_fd, GError **error)
 				R_HASH_INDEX_ERROR_SIZE,
 				"data file is empty");
 		return 0;
-	} else if ((size / 4096) > (off_t)G_MAXUINT32) {
+	} else if ((size / R_HASH_INDEX_CHUNK_SIZE) > (off_t)G_MAXUINT32) {
 		g_set_error(error,
 				R_HASH_INDEX_ERROR,
 				R_HASH_INDEX_ERROR_SIZE,
 				"data file size (%"G_GINT64_FORMAT ") is too large",
 				(gint64)size);
 		return 0;
-	} else if (size % 4096) {
+	} else if (size % R_HASH_INDEX_CHUNK_SIZE) {
 		g_set_error(error,
 				R_HASH_INDEX_ERROR,
 				R_HASH_INDEX_ERROR_SIZE,
-				"data file size (%"G_GINT64_FORMAT ") is not a multiple of 4096 bytes",
-				(gint64)size);
+				"data file size (%"G_GINT64_FORMAT ") is not a multiple of %"G_GINT64_FORMAT " bytes",
+				(gint64)size, (gint64)R_HASH_INDEX_CHUNK_SIZE);
 		return 0;
 	}
 
-	return size / 4096;
+	return size / R_HASH_INDEX_CHUNK_SIZE;
 }
 
 /**
